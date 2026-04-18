@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "."
+  ],
+  "graphs": {
+    "ai_solutions_agency_os": "./ai_solutions_agency/workflow.py:agent"
+  },
+  "env": "./.env"
+}
