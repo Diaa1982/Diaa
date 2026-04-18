@@ -1,0 +1,9 @@
+{
+  "deal_id": "deal-demo-001",
+  "customer_name": "Acme Retail Group",
+  "industry": "retail",
+  "company_size": "mid-market",
+  "geo": "UAE",
+  "currency": "AED",
+  "customer_input_raw": "We are a retail company. Our customer support is slow, our product recommendations are weak, and leadership wants an AI solution quickly. We do not yet have a clear baseline, but we need something practical with measurable value and a path to scale."
+}
