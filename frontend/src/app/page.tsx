@@ -3,27 +3,102 @@
 import { useState } from "react"
 import { runDeal } from "@/lib/api"
 
-export default function HomePage() {
-  const [form, setForm] = useState({
-    customer_name: "",
-    customer_input_raw: "",
-    industry: "",
-    company_size: "",
-    geo: "",
-    currency: "USD",
-    thread_id: "demo-thread-1",
-  })
+type FormState = {
+  customer_name: string
+  customer_input_raw: string
+  industry: string
+  company_size: string
+  geo: string
+  currency: string
+  thread_id: string
+}
 
+type ValidationErrors = Partial<Record<keyof FormState, string>>
+
+const initialForm: FormState = {
+  customer_name: "",
+  customer_input_raw: "",
+  industry: "",
+  company_size: "",
+  geo: "",
+  currency: "USD",
+  thread_id: "demo-thread-1",
+}
+
+const sampleForm: FormState = {
+  customer_name: "ABC Retail",
+  customer_input_raw: "We want AI to improve support and recommendations.",
+  industry: "Retail",
+  company_size: "Mid-market",
+  geo: "UAE",
+  currency: "AED",
+  thread_id: "demo-thread-1",
+}
+
+const industries = ["", "Retail", "Banking", "Government", "Healthcare", "Logistics", "Manufacturing", "Telecommunications", "Education", "Other"]
+const companySizes = ["", "Startup", "SME", "Mid-market", "Enterprise", "Public Sector"]
+const currencies = ["USD", "AED", "EUR", "GBP", "SAR"]
+
+export default function HomePage() {
+  const [form, setForm] = useState<FormState>(initialForm)
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState("")
 
-  const updateField = (key: string, value: string) => {
+  const updateField = (key: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }))
+    setValidationErrors((prev) => ({ ...prev, [key]: "" }))
+  }
+
+  const resetForm = () => {
+    setForm(initialForm)
+    setValidationErrors({})
+    setError("")
+  }
+
+  const loadSampleData = () => {
+    setForm(sampleForm)
+    setValidationErrors({})
+    setError("")
+  }
+
+  const validateForm = () => {
+    const errors: ValidationErrors = {}
+
+    if (!form.customer_name.trim()) {
+      errors.customer_name = "Customer name is required."
+    }
+
+    if (!form.customer_input_raw.trim()) {
+      errors.customer_input_raw = "Customer need description is required."
+    }
+
+    if (!form.industry.trim()) {
+      errors.industry = "Please select an industry."
+    }
+
+    if (!form.company_size.trim()) {
+      errors.company_size = "Please select a company size."
+    }
+
+    if (!form.currency.trim()) {
+      errors.currency = "Please select a currency."
+    }
+
+    return errors
   }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const errors = validateForm()
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      setError("Please correct the highlighted fields before submitting.")
+      return
+    }
+
     setLoading(true)
     setError("")
     setResult(null)
@@ -44,65 +119,131 @@ export default function HomePage() {
       <p>Lead intake and deal orchestration</p>
 
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, marginTop: 20 }}>
-        <input
-          placeholder="Customer name"
-          value={form.customer_name}
-          onChange={(e) => updateField("customer_name", e.target.value)}
-          required
-          style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
-        />
+        <div style={{ display: "grid", gap: 6 }}>
+          <input
+            placeholder="Customer name"
+            value={form.customer_name}
+            onChange={(e) => updateField("customer_name", e.target.value)}
+            style={{ padding: 10, border: `1px solid ${validationErrors.customer_name ? "#d32f2f" : "#ccc"}`, borderRadius: 6 }}
+          />
+          {validationErrors.customer_name && <span style={{ color: "#d32f2f", fontSize: 13 }}>{validationErrors.customer_name}</span>}
+        </div>
 
-        <textarea
-          placeholder="Describe the customer need"
-          value={form.customer_input_raw}
-          onChange={(e) => updateField("customer_input_raw", e.target.value)}
-          required
-          rows={6}
-          style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
-        />
+        <div style={{ display: "grid", gap: 6 }}>
+          <textarea
+            placeholder="Describe the customer need"
+            value={form.customer_input_raw}
+            onChange={(e) => updateField("customer_input_raw", e.target.value)}
+            rows={6}
+            style={{ padding: 10, border: `1px solid ${validationErrors.customer_input_raw ? "#d32f2f" : "#ccc"}`, borderRadius: 6 }}
+          />
+          {validationErrors.customer_input_raw && <span style={{ color: "#d32f2f", fontSize: 13 }}>{validationErrors.customer_input_raw}</span>}
+        </div>
 
-        <input
-          placeholder="Industry"
-          value={form.industry}
-          onChange={(e) => updateField("industry", e.target.value)}
-          style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
-        />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          <div style={{ display: "grid", gap: 6 }}>
+            <select
+              value={form.industry}
+              onChange={(e) => updateField("industry", e.target.value)}
+              style={{ padding: 10, border: `1px solid ${validationErrors.industry ? "#d32f2f" : "#ccc"}`, borderRadius: 6, background: "white" }}
+            >
+              {industries.map((industry) => (
+                <option key={industry || "placeholder"} value={industry}>
+                  {industry || "Select industry"}
+                </option>
+              ))}
+            </select>
+            {validationErrors.industry && <span style={{ color: "#d32f2f", fontSize: 13 }}>{validationErrors.industry}</span>}
+          </div>
 
-        <input
-          placeholder="Company size"
-          value={form.company_size}
-          onChange={(e) => updateField("company_size", e.target.value)}
-          style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
-        />
+          <div style={{ display: "grid", gap: 6 }}>
+            <select
+              value={form.company_size}
+              onChange={(e) => updateField("company_size", e.target.value)}
+              style={{ padding: 10, border: `1px solid ${validationErrors.company_size ? "#d32f2f" : "#ccc"}`, borderRadius: 6, background: "white" }}
+            >
+              {companySizes.map((size) => (
+                <option key={size || "placeholder"} value={size}>
+                  {size || "Select company size"}
+                </option>
+              ))}
+            </select>
+            {validationErrors.company_size && <span style={{ color: "#d32f2f", fontSize: 13 }}>{validationErrors.company_size}</span>}
+          </div>
 
-        <input
-          placeholder="Geography"
-          value={form.geo}
-          onChange={(e) => updateField("geo", e.target.value)}
-          style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
-        />
+          <div style={{ display: "grid", gap: 6 }}>
+            <input
+              placeholder="Geography"
+              value={form.geo}
+              onChange={(e) => updateField("geo", e.target.value)}
+              style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
+            />
+          </div>
 
-        <input
-          placeholder="Currency"
-          value={form.currency}
-          onChange={(e) => updateField("currency", e.target.value)}
-          style={{ padding: 10, border: "1px solid #ccc", borderRadius: 6 }}
-        />
+          <div style={{ display: "grid", gap: 6 }}>
+            <select
+              value={form.currency}
+              onChange={(e) => updateField("currency", e.target.value)}
+              style={{ padding: 10, border: `1px solid ${validationErrors.currency ? "#d32f2f" : "#ccc"}`, borderRadius: 6, background: "white" }}
+            >
+              {currencies.map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </select>
+            {validationErrors.currency && <span style={{ color: "#d32f2f", fontSize: 13 }}>{validationErrors.currency}</span>}
+          </div>
+        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: 12,
-            background: "#111",
-            color: "white",
-            border: "none",
-            borderRadius: 6,
-            cursor: "pointer",
-          }}
-        >
-          {loading ? "Running..." : "Run deal"}
-        </button>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              padding: 12,
+              background: "#111",
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+          >
+            {loading ? "Running..." : "Run deal"}
+          </button>
+
+          <button
+            type="button"
+            onClick={loadSampleData}
+            disabled={loading}
+            style={{
+              padding: 12,
+              background: "#f1f3f5",
+              color: "#111",
+              border: "1px solid #ccc",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+          >
+            Load sample data
+          </button>
+
+          <button
+            type="button"
+            onClick={resetForm}
+            disabled={loading}
+            style={{
+              padding: 12,
+              background: "white",
+              color: "#111",
+              border: "1px solid #ccc",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+          >
+            Reset form
+          </button>
+        </div>
       </form>
 
       {error && (
