@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ project_name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem auto; max-width: 1100px; padding: 0 1rem; color: #222; }
+    h1, h2 { margin-bottom: 0.4rem; }
+    .muted { color: #666; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; background: #fafafa; }
+    code { background: #f3f3f3; padding: 0.15rem 0.35rem; border-radius: 4px; }
+    .phase { font-size: 0.85rem; color: #0b5; font-weight: bold; }
+    .top { margin-bottom: 1.5rem; }
+    a { color: #0057b8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1>{{ project_name }}</h1>
+    <p class="muted">Version {{ project_version }}</p>
+    <p>Deployable starter for an AI advisory and transformation company. Use the UI for quick browsing and the API for structured retrieval.</p>
+    <p>Useful endpoints: <code>/healthz</code>, <code>/api/manifest</code>, <code>/api/agents</code>, <code>/api/agents/{agent_id}</code></p>
+  </div>
+
+  <h2>Configured agents</h2>
+  <div class="grid">
+    {% for agent in agents %}
+      <div class="card">
+        <div class="phase">{{ agent.phase|upper }}</div>
+        <h3>{{ agent.name }}</h3>
+        <p><strong>{{ agent.role_title }}</strong></p>
+        <p>{{ agent.purpose }}</p>
+        <p><strong>Activate when:</strong> {{ agent.activate_when }}</p>
+        <p><a href="/api/agents/{{ agent.id }}" target="_blank">Open JSON</a></p>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

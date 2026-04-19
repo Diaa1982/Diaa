@@ -1,0 +1,26 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ai-agent-company-platform
+spec:
+  template:
+    spec:
+      containers:
+        - image: REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/ai-agent-company-platform:latest
+          env:
+            - name: APP_ENV
+              value: production
+            - name: DEBUG
+              value: "false"
+            - name: ADMIN_ENABLED
+              value: "true"
+            - name: ADMIN_WRITE_ENABLED
+              value: "false"
+            - name: DEFAULT_EXECUTION_MODE
+              value: mock
+            - name: DATABASE_URL
+              value: sqlite:////tmp/agent_platform_data/executions.db
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"

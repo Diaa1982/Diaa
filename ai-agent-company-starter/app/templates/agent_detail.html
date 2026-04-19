@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="detail-header">
+  <div>
+    <div class="eyebrow">{{ agent.phase|upper }}</div>
+    <h2>{{ agent.name }}</h2>
+    <p class="muted">{{ agent.role_title }}</p>
+    <p>{{ agent.purpose }}</p>
+  </div>
+</section>
+
+<section class="three-col">
+  <div class="card detail-meta">
+    <h3>Functions</h3>
+    <ul>
+      {% for item in agent.functions %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+    <h3>Activate when</h3>
+    <p>{{ agent.activate_when }}</p>
+    <h3>Escalation conditions</h3>
+    <ul>
+      {% for item in agent.escalation_conditions %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card prompt-card">
+    <div class="row-between">
+      <h3>Prompt</h3>
+      <span class="tag">{{ agent.prompt_path }}</span>
+    </div>
+    <textarea id="prompt-editor" class="prompt-editor">{{ agent.prompt_text }}</textarea>
+    <div class="button-row">
+      <button onclick="savePrompt('{{ agent.id }}')" {% if not settings.admin_write_enabled %}disabled{% endif %}>Save prompt</button>
+      <span id="save-status" class="muted"></span>
+    </div>
+  </div>
+
+  <div class="card execution-card">
+    <h3>Run execution</h3>
+    <label>Mode</label>
+    <select id="execution-mode">
+      <option value="mock">mock</option>
+      <option value="prompt_only">prompt_only</option>
+      <option value="openai_compatible">openai_compatible</option>
+    </select>
+    <label>Task</label>
+    <textarea id="execution-task" rows="6" placeholder="What do you want this agent to do?"></textarea>
+    <label>Context JSON</label>
+    <textarea id="execution-context" rows="10">{
+  "client_type": "government finance entity",
+  "service": "Business Study and AI Opportunity Assessment"
+}</textarea>
+    <div class="button-row">
+      <button onclick="runExecution('{{ agent.id }}')">Run agent</button>
+    </div>
+    <pre id="execution-output" class="output-box">Execution output will appear here.</pre>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,613 @@
+{
+  "name": "AI Agent Company Starter",
+  "version": "0.1.0",
+  "default_phase": "phase1",
+  "global_rules_file": "docs/global-operating-rules.md",
+  "agents": [
+    {
+      "id": "enterprise-orchestrator",
+      "phase": "phase1",
+      "name": "Enterprise Orchestrator Agent",
+      "role_title": "Delivery Controller",
+      "activate_when": "Every engagement after a lead is qualified or a proposal is approved.",
+      "purpose": "Controls end-to-end delivery flow, dependencies, stage gates, traceability, consolidation, and CEO-ready packs.",
+      "inputs_required": [
+        "Engagement brief",
+        "Service scope",
+        "Proposal status",
+        "Market/origin context where relevant"
+      ],
+      "outputs_expected": [
+        "Engagement classification",
+        "Task sequence",
+        "Dependency map",
+        "Review checkpoints",
+        "Consolidated pack",
+        "CEO summary"
+      ],
+      "handoff_destination": [
+        "All specialist agents",
+        "QA",
+        "CEO"
+      ],
+      "escalation_conditions": [
+        "Unclear scope",
+        "Conflicting outputs",
+        "Weak evidence",
+        "Governance concern",
+        "Incomplete pack"
+      ],
+      "functions": [
+        "Classify engagement and service line",
+        "Assign agents and sequence tasks",
+        "Enforce stage gates and mandatory reviews",
+        "Return incomplete work for revision",
+        "Consolidate outputs and surface conflicts",
+        "Prepare approval packs for CEO review"
+      ],
+      "prompt_path": "agents/phase1/enterprise-orchestrator.md"
+    },
+    {
+      "id": "market-intelligence-pilot-conversion",
+      "phase": "phase1",
+      "name": "Market Intelligence and Pilot Conversion Agent",
+      "role_title": "Market Strategist",
+      "activate_when": "Before campaign launch, before outbound outreach, and whenever pilot conversion needs improvement.",
+      "purpose": "Identifies the right audience, creates pilot-first positioning, and converts qualified prospects into measurable proof-of-value engagements.",
+      "inputs_required": [
+        "Service catalogue",
+        "Target sectors",
+        "Past case material",
+        "Pilot design principles",
+        "Commercial objections",
+        "Market signals"
+      ],
+      "outputs_expected": [
+        "Ideal client profiles",
+        "Sector priority map",
+        "Trigger events",
+        "Pilot value proposition",
+        "Outreach messaging",
+        "Objection handling pack",
+        "Channel plan"
+      ],
+      "handoff_destination": [
+        "Client Intake",
+        "Proposal",
+        "Orchestrator"
+      ],
+      "escalation_conditions": [
+        "No credible proof base",
+        "Misleading claims risk",
+        "Unclear target market",
+        "Low response rates",
+        "Regulated communications risk"
+      ],
+      "functions": [
+        "Define ideal client profiles and buyer roles",
+        "Map target sectors, buying triggers, and pilot propensity",
+        "Develop pilot-first value proposition and messaging",
+        "Create objection handling for trust, ROI, governance, and procurement concerns",
+        "Feed market feedback into service packaging and proposal design"
+      ],
+      "prompt_path": "agents/phase1/market-intelligence-pilot-conversion.md"
+    },
+    {
+      "id": "client-intake-qualification",
+      "phase": "phase1",
+      "name": "Client Intake and Qualification Agent",
+      "role_title": "Intake Analyst",
+      "activate_when": "First qualified client contact.",
+      "purpose": "Converts incoming client demand into a structured problem statement and recommended service path.",
+      "inputs_required": [
+        "Client request",
+        "Conversation notes",
+        "Shared documents",
+        "Market context"
+      ],
+      "outputs_expected": [
+        "Intake summary",
+        "Business need statement",
+        "Delivery mode recommendation",
+        "Service line recommendation",
+        "Required input list"
+      ],
+      "handoff_destination": [
+        "Proposal",
+        "Orchestrator"
+      ],
+      "escalation_conditions": [
+        "Vague brief",
+        "Weak business context",
+        "Ambiguous delivery mode",
+        "Unsuitable lead"
+      ],
+      "functions": [
+        "Capture stated need in business terms",
+        "Identify target outcomes and readiness",
+        "Route to the right service line",
+        "List required client inputs"
+      ],
+      "prompt_path": "agents/phase1/client-intake-qualification.md"
+    },
+    {
+      "id": "proposal-commercial-structuring",
+      "phase": "phase1",
+      "name": "Proposal and Commercial Structuring Agent",
+      "role_title": "Commercial Architect",
+      "activate_when": "After intake approval.",
+      "purpose": "Converts the structured need into a bounded scope, phased delivery plan, and commercial logic note for CEO approval.",
+      "inputs_required": [
+        "Intake summary",
+        "Service catalogue",
+        "Market positioning inputs where relevant"
+      ],
+      "outputs_expected": [
+        "Proposal draft",
+        "Scope of work",
+        "Deliverables",
+        "Assumptions",
+        "Exclusions",
+        "Commercial logic note"
+      ],
+      "handoff_destination": [
+        "Orchestrator",
+        "CEO"
+      ],
+      "escalation_conditions": [
+        "Scope ambiguity",
+        "Overcommitment risk",
+        "Missing client inputs",
+        "Inappropriate pilot framing"
+      ],
+      "functions": [
+        "Define scope, exclusions, and deliverables",
+        "Structure engagement phases",
+        "State assumptions and client obligations",
+        "Frame commercial logic without finalizing price"
+      ],
+      "prompt_path": "agents/phase1/proposal-commercial-structuring.md"
+    },
+    {
+      "id": "business-context-research",
+      "phase": "phase1",
+      "name": "Business Context and Research Agent",
+      "role_title": "Context Analyst",
+      "activate_when": "After proposal approval and before diagnosis.",
+      "purpose": "Grounds the engagement in the client\u2019s operating environment, mandate, constraints, and strategic priorities.",
+      "inputs_required": [
+        "Strategy documents",
+        "Annual reports",
+        "Org charts",
+        "Interviews",
+        "Regulatory context"
+      ],
+      "outputs_expected": [
+        "Business context brief"
+      ],
+      "handoff_destination": [
+        "Process Diagnostic",
+        "AI Opportunity Discovery"
+      ],
+      "escalation_conditions": [
+        "Insufficient context",
+        "Inferred-only findings",
+        "Missing strategic clarity"
+      ],
+      "functions": [
+        "Analyze mandate and operating model",
+        "Identify constraints and pressures",
+        "Assess implications for AI feasibility and value"
+      ],
+      "prompt_path": "agents/phase1/business-context-research.md"
+    },
+    {
+      "id": "process-diagnostic",
+      "phase": "phase1",
+      "name": "Process Diagnostic Agent",
+      "role_title": "Process Analyst",
+      "activate_when": "After business context brief is ready.",
+      "purpose": "Identifies process pain points, bottlenecks, manual effort, and AI-relevant intervention points.",
+      "inputs_required": [
+        "Process maps",
+        "SOPs",
+        "Workflow data",
+        "Activity lists",
+        "Interviews"
+      ],
+      "outputs_expected": [
+        "Diagnostic report",
+        "Pain point register",
+        "AI-relevant and non-AI improvement areas"
+      ],
+      "handoff_destination": [
+        "AI Opportunity Discovery"
+      ],
+      "escalation_conditions": [
+        "Missing process data",
+        "Inferred-only issues",
+        "Weak operational evidence"
+      ],
+      "functions": [
+        "Review processes and identify bottlenecks",
+        "Assess rework, delays, and manual effort",
+        "Distinguish AI-relevant from non-AI fixes"
+      ],
+      "prompt_path": "agents/phase1/process-diagnostic.md"
+    },
+    {
+      "id": "ai-opportunity-discovery",
+      "phase": "phase1",
+      "name": "AI Opportunity Discovery Agent",
+      "role_title": "Opportunity Analyst",
+      "activate_when": "After diagnostic findings are ready.",
+      "purpose": "Converts business problems and pain points into specific AI opportunities.",
+      "inputs_required": [
+        "Business context brief",
+        "Diagnostic findings",
+        "Client priorities"
+      ],
+      "outputs_expected": [
+        "Opportunity register with use cases, AI role classification, value drivers, and time horizons"
+      ],
+      "handoff_destination": [
+        "Prioritization and Scoring"
+      ],
+      "escalation_conditions": [
+        "Generic use cases",
+        "Weak evidence base",
+        "No clear value logic"
+      ],
+      "functions": [
+        "Generate opportunity register",
+        "Map each opportunity to a business problem",
+        "Classify AI role and time horizon",
+        "Remove overlaps and duplicates"
+      ],
+      "prompt_path": "agents/phase1/ai-opportunity-discovery.md"
+    },
+    {
+      "id": "prioritization-scoring",
+      "phase": "phase1",
+      "name": "Prioritization and Scoring Agent",
+      "role_title": "Portfolio Analyst",
+      "activate_when": "After the opportunity register is complete.",
+      "purpose": "Ranks opportunities using transparent scoring based on value, feasibility, readiness, and governance complexity.",
+      "inputs_required": [
+        "Opportunity register",
+        "Business context brief"
+      ],
+      "outputs_expected": [
+        "Scoring table",
+        "Ranked portfolio",
+        "Quick wins",
+        "Strategic opportunities",
+        "Deferred items"
+      ],
+      "handoff_destination": [
+        "Business Case",
+        "Governance"
+      ],
+      "escalation_conditions": [
+        "Missing data on priority items",
+        "Low-confidence portfolio",
+        "Poorly defined opportunities"
+      ],
+      "functions": [
+        "Score and rank opportunities",
+        "Segment portfolio",
+        "Identify quick wins and deferred items",
+        "State score confidence"
+      ],
+      "prompt_path": "agents/phase1/prioritization-scoring.md"
+    },
+    {
+      "id": "business-case-value-modeling",
+      "phase": "phase1",
+      "name": "Business Case and Value Modeling Agent",
+      "role_title": "Value Analyst",
+      "activate_when": "After prioritized opportunities are confirmed.",
+      "purpose": "Builds conservative, traceable value cases for priority opportunities.",
+      "inputs_required": [
+        "Ranked portfolio",
+        "Business context",
+        "Baseline data"
+      ],
+      "outputs_expected": [
+        "Value cases",
+        "ROI logic where possible",
+        "Assumptions register",
+        "Confidence profile"
+      ],
+      "handoff_destination": [
+        "Executive Reporting"
+      ],
+      "escalation_conditions": [
+        "No baseline data",
+        "False precision risk",
+        "Weak evidence base"
+      ],
+      "functions": [
+        "Define current-state economics",
+        "Model direct and indirect value",
+        "Use ranges instead of false precision",
+        "Document assumptions and sensitivities"
+      ],
+      "prompt_path": "agents/phase1/business-case-value-modeling.md"
+    },
+    {
+      "id": "governance-risk",
+      "phase": "phase1",
+      "name": "Governance and Risk Agent",
+      "role_title": "Governance Analyst",
+      "activate_when": "After opportunities are prioritized; runs parallel to Business Case.",
+      "purpose": "Defines control, oversight, policy, and accountability requirements for each opportunity.",
+      "inputs_required": [
+        "Ranked portfolio",
+        "Regulatory context",
+        "Solution direction"
+      ],
+      "outputs_expected": [
+        "Risk classifications",
+        "Governance conditions",
+        "Escalation flags",
+        "Control requirements"
+      ],
+      "handoff_destination": [
+        "Executive Reporting"
+      ],
+      "escalation_conditions": [
+        "High-risk use case",
+        "Restricted use case",
+        "Sensitive data",
+        "Unclear policy context"
+      ],
+      "functions": [
+        "Classify risk",
+        "Define human oversight requirements",
+        "Specify control and audit requirements",
+        "Surface policy/accountability implications"
+      ],
+      "prompt_path": "agents/phase1/governance-risk.md"
+    },
+    {
+      "id": "executive-reporting-narrative",
+      "phase": "phase1",
+      "name": "Executive Reporting and Narrative Agent",
+      "role_title": "Reporting Analyst",
+      "activate_when": "After all upstream outputs are consolidated.",
+      "purpose": "Converts all upstream outputs into executive-grade reports and decision packs.",
+      "inputs_required": [
+        "All agent outputs",
+        "Business context brief",
+        "Orchestrator notes"
+      ],
+      "outputs_expected": [
+        "Executive report",
+        "Executive summary",
+        "Decision narrative",
+        "Client-facing pack"
+      ],
+      "handoff_destination": [
+        "QA"
+      ],
+      "escalation_conditions": [
+        "Conflicting findings",
+        "Inconsistent terminology",
+        "Missing sections"
+      ],
+      "functions": [
+        "Build executive storyline",
+        "Connect findings to decisions",
+        "Maintain consistency of terms and logic",
+        "Keep outputs leadership-ready"
+      ],
+      "prompt_path": "agents/phase1/executive-reporting-narrative.md"
+    },
+    {
+      "id": "quality-assurance-consistency",
+      "phase": "phase1",
+      "name": "Quality Assurance and Consistency Agent",
+      "role_title": "QA Controller",
+      "activate_when": "Before every CEO review, without exception.",
+      "purpose": "Verifies completeness, evidence traceability, logic consistency, and executive readiness before CEO review.",
+      "inputs_required": [
+        "Full draft pack"
+      ],
+      "outputs_expected": [
+        "QA log",
+        "Defect log",
+        "Release readiness verdict"
+      ],
+      "handoff_destination": [
+        "CEO",
+        "Responsible agent for correction"
+      ],
+      "escalation_conditions": [
+        "Missing section",
+        "Unsupported claim",
+        "Logic defect",
+        "Inconsistency",
+        "Unresolved governance issue"
+      ],
+      "functions": [
+        "Run 10-point QA review",
+        "Classify defects",
+        "Return packs for correction",
+        "Recommend readiness only"
+      ],
+      "prompt_path": "agents/phase1/quality-assurance-consistency.md"
+    },
+    {
+      "id": "knowledge-management-asset-reuse",
+      "phase": "phase1",
+      "name": "Knowledge Management and Asset Reuse Agent",
+      "role_title": "Knowledge Steward",
+      "activate_when": "After every approved and released engagement.",
+      "purpose": "Preserves reusable intellectual property, lessons learned, and improved templates after every approved release.",
+      "inputs_required": [
+        "Approved outputs",
+        "QA history",
+        "Lessons learned"
+      ],
+      "outputs_expected": [
+        "Reusable asset register",
+        "Knowledge base updates",
+        "Method improvement notes"
+      ],
+      "handoff_destination": [
+        "Internal knowledge base",
+        "Orchestrator"
+      ],
+      "escalation_conditions": [
+        "Client-confidential content in reusable assets",
+        "Weak asset quality",
+        "Anonymization failure"
+      ],
+      "functions": [
+        "Extract reusable methods and templates",
+        "Anonymize materials",
+        "Update the knowledge base",
+        "Recommend process and template improvements"
+      ],
+      "prompt_path": "agents/phase1/knowledge-management-asset-reuse.md"
+    },
+    {
+      "id": "solution-blueprint-functional-design",
+      "phase": "phase2",
+      "name": "Solution Blueprint and Functional Design Agent",
+      "role_title": "Solution Designer",
+      "activate_when": "When a priority opportunity is approved for detailed design.",
+      "purpose": "Converts an approved opportunity into business requirements, functional requirements, user interactions, data inputs, and embedded governance controls.",
+      "inputs_required": [
+        "Approved opportunity",
+        "Business case",
+        "Governance conditions",
+        "System context"
+      ],
+      "outputs_expected": [
+        "Solution blueprint",
+        "Requirements",
+        "Data/system dependency map"
+      ],
+      "handoff_destination": [
+        "Pilot Design",
+        "Capability Building"
+      ],
+      "escalation_conditions": [
+        "Ambiguous requirements",
+        "Missing data owners",
+        "Control gaps"
+      ],
+      "functions": [
+        "Define business and functional requirements",
+        "Specify user interaction model and override points",
+        "Translate governance conditions into design controls"
+      ],
+      "prompt_path": "agents/phase2/solution-blueprint-functional-design.md"
+    },
+    {
+      "id": "pilot-design-proof-of-value",
+      "phase": "phase2",
+      "name": "Pilot Design and Proof-of-Value Agent",
+      "role_title": "Pilot Strategist",
+      "activate_when": "When leadership wants to validate a solution before scale-up.",
+      "purpose": "Designs controlled pilots with a clear hypothesis, success criteria, evidence collection, and go/no-go rules.",
+      "inputs_required": [
+        "Solution blueprint",
+        "Business case",
+        "Governance conditions",
+        "Baseline metrics"
+      ],
+      "outputs_expected": [
+        "Pilot charter",
+        "Success criteria",
+        "Evidence collection framework",
+        "Decision logic"
+      ],
+      "handoff_destination": [
+        "Executive Reporting",
+        "Capability Building"
+      ],
+      "escalation_conditions": [
+        "Unclear hypothesis",
+        "No baseline",
+        "Weak success criteria",
+        "Governance gaps"
+      ],
+      "functions": [
+        "Define pilot objective and hypothesis",
+        "Set scope and scenarios",
+        "Define quantitative and qualitative success criteria",
+        "Establish go/no-go rules"
+      ],
+      "prompt_path": "agents/phase2/pilot-design-proof-of-value.md"
+    },
+    {
+      "id": "capability-building-adoption",
+      "phase": "phase2",
+      "name": "Capability Building and Adoption Agent",
+      "role_title": "Adoption Lead",
+      "activate_when": "When a designed or piloted solution requires workforce readiness and operating change.",
+      "purpose": "Defines enablement, training, ownership, and adoption support required for sustained use.",
+      "inputs_required": [
+        "Solution blueprint",
+        "Pilot findings",
+        "Target operating model"
+      ],
+      "outputs_expected": [
+        "Capability roadmap",
+        "Adoption risk register",
+        "Training plan"
+      ],
+      "handoff_destination": [
+        "Executive Reporting",
+        "Knowledge Management"
+      ],
+      "escalation_conditions": [
+        "Unclear ownership",
+        "High resistance",
+        "Weak sponsorship"
+      ],
+      "functions": [
+        "Define capability and readiness gaps",
+        "Create training and adoption plans",
+        "Identify resistance risks and mitigations"
+      ],
+      "prompt_path": "agents/phase2/capability-building-adoption.md"
+    },
+    {
+      "id": "operating-model-design",
+      "phase": "phase2",
+      "name": "Operating Model Design Agent",
+      "role_title": "Operating Model Architect",
+      "activate_when": "When governance structures, decision rights, and target-state operating mechanisms must be formalized.",
+      "purpose": "Defines target AI operating model, decision rights, forums, and role accountability.",
+      "inputs_required": [
+        "Governance requirements",
+        "Organization context",
+        "Portfolio needs"
+      ],
+      "outputs_expected": [
+        "Target operating model",
+        "Roles and decision rights",
+        "Governance forums"
+      ],
+      "handoff_destination": [
+        "Executive Reporting",
+        "Capability Building"
+      ],
+      "escalation_conditions": [
+        "Conflicting accountabilities",
+        "Missing sponsorship",
+        "Policy misalignment"
+      ],
+      "functions": [
+        "Design target roles and decision rights",
+        "Define governance forums and review cadence",
+        "Map accountability across lifecycle stages"
+      ],
+      "prompt_path": "agents/phase2/operating-model-design.md"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="banner">
+  <div class="card">
+    <h2>Platform summary</h2>
+    <div class="stats-grid">
+      <div><span class="stat-label">Agents</span><strong>{{ agents|length }}</strong></div>
+      <div><span class="stat-label">Default mode</span><strong>{{ settings.default_execution_mode }}</strong></div>
+      <div><span class="stat-label">Write access</span><strong>{{ 'Enabled' if settings.admin_write_enabled else 'Disabled' }}</strong></div>
+      <div><span class="stat-label">Provider</span><strong>{{ settings.llm_provider }}</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="two-col">
+  <div class="card">
+    <h2>Configured agents</h2>
+    <div class="agent-list">
+      {% for agent in agents %}
+      <a class="agent-row" href="/admin/agents/{{ agent.id }}">
+        <div>
+          <div class="eyebrow">{{ agent.phase|upper }}</div>
+          <strong>{{ agent.name }}</strong>
+          <p>{{ agent.role_title }}</p>
+        </div>
+        <span>Open</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Recent executions</h2>
+    <div class="execution-list">
+      {% for item in recent_executions %}
+      <div class="execution-row">
+        <div>
+          <strong>{{ item.agent_id }}</strong>
+          <p>{{ item.status }} · {{ item.mode }}</p>
+        </div>
+        <a href="/api/v1/executions/{{ item.execution_id }}" target="_blank">JSON</a>
+      </div>
+      {% else %}
+      <p class="muted">No executions yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
