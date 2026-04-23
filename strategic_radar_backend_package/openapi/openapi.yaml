@@ -1,0 +1,230 @@
+openapi: 3.1.0
+info:
+  title: Strategic Radar Backend API
+  version: 1.0.0
+  description: Governed multi-agent strategic radar backend API
+servers:
+  - url: https://api.example.com/api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Sources
+  - name: Source Approvals
+  - name: Ingestion
+  - name: Documents
+  - name: Signals
+  - name: Recommendations
+  - name: Approvals
+  - name: Reports
+  - name: Knowledge
+  - name: Metrics
+  - name: Feedback
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UUID:
+      type: string
+      format: uuid
+    Timestamp:
+      type: string
+      format: date-time
+    User:
+      type: object
+      properties:
+        user_id:
+          $ref: '#/components/schemas/UUID'
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+        status:
+          type: string
+    SourceCreateRequest:
+      type: object
+      required:
+        - source_name
+        - base_domain
+        - jurisdiction_code
+        - source_type
+        - officiality_class
+      properties:
+        source_name:
+          type: string
+        base_domain:
+          type: string
+        jurisdiction_code:
+          type: string
+        source_type:
+          type: string
+          enum: [rss, api, web, filing, gazette, statistics, procurement, exchange]
+        officiality_class:
+          type: string
+          enum: [official, official_attributable, licensed_official_lineage]
+    Source:
+      type: object
+      properties:
+        source_id:
+          $ref: '#/components/schemas/UUID'
+        source_name:
+          type: string
+        base_domain:
+          type: string
+        jurisdiction_code:
+          type: string
+        source_type:
+          type: string
+        officiality_class:
+          type: string
+        status:
+          type: string
+    ReportCreateRequest:
+      type: object
+      required: [report_type, audience, period_start, period_end]
+      properties:
+        report_type:
+          type: string
+          enum: [signal_brief, weekly_digest, monthly_strategy_update, quarterly_sector_outlook]
+        audience:
+          type: string
+          enum: [business, government, executive_internal]
+        period_start:
+          type: string
+          format: date
+        period_end:
+          type: string
+          format: date
+paths:
+  /me:
+    get:
+      tags: [Auth]
+      summary: Get current authenticated user
+      responses:
+        '200':
+          description: Current user
+  /sources:
+    post:
+      tags: [Sources]
+      summary: Create source proposal
+      responses:
+        '201':
+          description: Source created
+    get:
+      tags: [Sources]
+      summary: List sources
+      responses:
+        '200':
+          description: Source list
+  /sources/{source_id}:
+    get:
+      tags: [Sources]
+      summary: Get source detail
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Source detail
+    patch:
+      tags: [Sources]
+      summary: Update source metadata
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Source updated
+  /source-approvals/{source_id}/decision:
+    post:
+      tags: [Source Approvals]
+      summary: Approve or reject source
+      responses:
+        '200':
+          description: Decision recorded
+  /ingestion/run:
+    post:
+      tags: [Ingestion]
+      summary: Trigger manual ingestion
+      responses:
+        '202':
+          description: Ingestion started
+  /signals:
+    get:
+      tags: [Signals]
+      summary: List signals
+      responses:
+        '200':
+          description: Signal list
+  /signals/{signal_id}:
+    get:
+      tags: [Signals]
+      summary: Get signal detail
+      responses:
+        '200':
+          description: Signal detail
+  /approvals/inbox:
+    get:
+      tags: [Approvals]
+      summary: List approval tasks
+      responses:
+        '200':
+          description: Approval inbox
+  /approvals/{workflow_record_id}/decision:
+    post:
+      tags: [Approvals]
+      summary: Submit approval decision
+      responses:
+        '200':
+          description: Approval decision recorded
+  /reports:
+    post:
+      tags: [Reports]
+      summary: Create report generation job
+      responses:
+        '202':
+          description: Report job accepted
+    get:
+      tags: [Reports]
+      summary: List reports
+      responses:
+        '200':
+          description: Reports list
+  /reports/{report_id}:
+    get:
+      tags: [Reports]
+      summary: Get report detail
+      responses:
+        '200':
+          description: Report detail
+  /knowledge:
+    get:
+      tags: [Knowledge]
+      summary: List approved knowledge objects
+      responses:
+        '200':
+          description: Knowledge list
+  /feedback:
+    post:
+      tags: [Feedback]
+      summary: Submit feedback
+      responses:
+        '201':
+          description: Feedback stored
+  /metrics/operational:
+    get:
+      tags: [Metrics]
+      summary: Operational metrics snapshot
+      responses:
+        '200':
+          description: Metrics response
