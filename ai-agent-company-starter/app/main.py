@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import admin, agents, config, executions, health
@@ -17,6 +18,13 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         docs_url='/api/v1/docs',
         openapi_url='/api/v1/openapi.json',
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*'],
     )
     app.mount('/static', StaticFiles(directory='app/static'), name='static')
     app.include_router(health.router, prefix='/api/v1', tags=['health'])
